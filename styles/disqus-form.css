@@ -1,0 +1,7 @@
+body,
+textarea,
+input
+{
+	direction:	rtl;
+	text-align:	right;
+}

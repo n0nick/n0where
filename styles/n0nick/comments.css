@@ -1,0 +1,240 @@
+/* hey, it works. */
+
+body {
+   background: #efefef;
+   text-align: center;
+   font-family: arial, "lucida console", sans-serif;
+   letter-spacing: 1.5px;
+   direction: rtl;
+
+   /* font size should be small. but stupid msie messes it up, so we give it x-small */
+   voice-family: "\"}\""; voice-family: inherit;
+   font-size: x-small;
+}
+html>body {
+   font-size: small;
+}
+
+a {
+   color: #fff;
+   text-decoration: underline;
+}
+a:visited { color: #fff; }
+a:hover   { text-decoration: none; }
+
+input {
+   background-color: #fff;
+   color: #000;
+   border: 1px solid #000;
+   width: 200px;
+   font-family: arial, helvetica, sans-serif;
+}
+textarea {
+   background-color: #fff;
+   color: #000;
+   border: 1px solid #000;
+   width: 250px;
+   height: 100px;
+   font-family: arial, helvetica, sans-serif;
+}
+
+hr {
+   width: 85%;
+}
+
+ul {
+   margin: 10px 35px auto 20px;
+   list-style-type: square;
+   text-align: right;
+}
+
+li a {
+   font-weight: bold;
+   text-decoration: none;
+   color: #026;
+}
+li a:hover   { text-decoration: underline; }
+li a:visited { color: #026; }
+
+div.row {
+  clear: both;
+  padding-top: 10px;
+}
+div.row span.label {
+  float: right;
+  width: 100px;
+  padding-left: 2px;
+  text-align: left;
+}
+div.row span.formw {
+  width: 255px;
+  text-align: right;
+}
+
+div.colspan {
+   margin-right: 50px;
+}
+
+div.row span.list {
+   float: right;
+   padding-left: 2px;
+   text-align: right;
+}
+
+#topp {
+   position: absolute;
+   top: 5px;
+   left: 10px;
+   margin-left: 2.5%;
+   padding: 0px 0px 0px 0px;
+}
+#topp a {
+   color: #000;
+   text-decoration: none;
+   font-weight: bold;
+}
+#topp a:visited { color: #000; }
+
+#topp h1 {
+   font: x-large verdana, helvetica, sans-serif;
+   font-weight: bold;
+   direction: ltr;
+   margin: 0px 0px 0px 0px;
+   text-align: left;
+}
+
+#topp div.sub {
+   float: left;
+   font: small verdana, helvetica, sans-serif;
+   direction: rtl;
+}
+
+div.comment {
+   background-color: #37c;
+   color: #fff;
+   width: 95%;
+   margin: 20px auto 20px;
+   border: 1px solid #a00;
+   text-align: right;
+}
+
+div.comment h2 {
+   background-color: #a00;
+   color: #fff;
+   font-size: small;
+   margin: 0px 0px 0px 0px;
+   padding: 0px 2px 0px 2px;
+   vertical-align: bottom;
+   text-align: left;
+}
+div.comment h2 a {
+   color: #fff;
+   font-weight: bold;
+   text-decoration: none;
+}
+div.comment h2 a:hover   { text-decoration: none; }
+div.comment h2 a:visited { color: #fff; }
+div.comment h2 a.poster  { float: right; }
+
+div.comment h2 a.del {
+   color: #a00;
+   text-align: left;
+   font-size: xx-small;
+}
+div.comment h2 a.del:visited { color: #a00; }
+
+div.comment h2 span.date {
+   font-weight: normal;
+   font-size: xx-small;
+   direction: ltr;
+}
+
+div.comment div.details {
+   background-color: #26a;
+   color: #fff;
+   padding: 0px 2px 0px 2px;
+   text-align: right;
+   direction: ltr; /* gecko bug(?) */
+}
+div.details span.url {
+   float: left;
+   direction: rtl;
+}
+div.details div.parent {
+   direction: rtl;
+}
+
+div.text {
+   margin: 2px 2px 2px 2px;
+}
+
+div.comment div.reply {
+   background-color: #222;
+}
+div.reply a         { color: #fff; }
+div.reply a:visited { color: #fff; }
+
+div.replyhead {
+   text-align: right; 
+}
+div.replyhead a {
+   color: #000;
+}
+
+h2.postcomment {
+   text-align: right;
+}
+h2.postcomment a {
+   color: #000;
+   text-decoration: none;
+   font-weight: bold;
+}
+
+div.form {
+   text-align: right;
+}
+
+label.reqf {
+   color: #f00;
+}
+
+input#sub {
+   background-color: #000;
+   color: #fff;
+   border: 1px groove #999;
+   width: 75px;
+   font: 10pt arial, helvetica, sans-serif;
+   font-weight: bold;
+}
+
+input#gocode {
+   width: 100px;
+}
+
+#remember {
+   background: transparent;
+   border: 0px;
+   width: auto;
+   height: auto;
+}
+
+input.password {
+   background-color: #360;
+   color: #fff;
+   width: 100px;
+   border: 1px solid #000;
+}
+
+img.emticn-add {
+   cursor: pointer;
+}
+
+#burnallgifs {
+   float: left;
+   direction: ltr;
+}
+#burnallgifs img {
+   border: none;
+}
+
+/* simba says roar! */  

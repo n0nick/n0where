@@ -1,0 +1,175 @@
+/* @todo space between photo and h1 in MSIE */
+
+body {
+   background-color: #fff;
+   font-size: small;
+   margin: 0px 0px 0px 0px;
+   font-family: verdana, arial, helvatica, sans-serif;
+}
+
+a {
+   font-weight: bold;
+   color: #06b;
+   text-decoration: none;
+}
+a:hover {
+   text-decoration: underline;
+   background-color: #eee;
+}
+a:active {
+   color: #d00;
+   background-color: #ff0;
+}
+a:visited { color: #06b;  }
+
+img {
+   border: none;
+}
+
+div.photo {
+   width: 100%;
+   height: 275px;
+   background-image: url('../../img/items/collage.png');
+}
+div.photo span {
+   display: none;
+}
+
+ul.topnav {
+   margin: 0px 0px 0px 0px;
+   padding: 0px 20px 2px 20px;
+   background-color: #000;
+   color: #fff;
+   font-size: large;
+   text-align: left;
+   white-space: nowrap;
+}
+ul.topnav li {
+   display: inline;
+   list-style-type: none;
+}
+ul.topnav li a {
+   color: #fff;
+   font-weight: normal;
+}
+ul.topnav li a:hover { background: none; }
+ul.topnav li a:visited { color: #fff; }
+
+div.post {
+   padding: 0px 20px 5px 20px;
+   font-size: larger;
+   line-height: 150%;
+   letter-spacing: 1pt;
+}
+div.post h1 {
+   font-weight: bold;
+   font-size: x-large;
+}
+
+div.post div.date {
+   text-align: left;
+   border-bottom: 1px solid #000;
+   margin-top: 5px;
+}
+
+div.post p.date {
+   text-align: left;
+   font-size: smaller;
+   font-style: italic;
+}
+
+ul.nav {
+   text-align: center;
+   border-top: 3px double #000;
+   border-bottom: 3px double #000;
+   margin: 0px 20px 0px 20px;
+}
+ul.nav li {
+   display: inline;
+   list-style-type: none;
+}
+ul.nav li a { font-weight: normal; }
+
+div.comments {
+   letter-spacing: 0px;
+   margin: 0px 20px 0px 20px;
+}
+div.comments h1 a { color: #000; }
+div.comments h1 a:hover { text-decoration: none; background: none; }
+
+div.comments h2 a { color: #000; }
+div.comments h2 a:hover { text-decoration: none; background: none; }
+
+div.comments div.comment {
+   margin-bottom: 15px;
+   width: ;
+   background-color: #bf5;
+   color: #000;
+   text-align: right;
+   border: 1px solid #05a;
+}
+div.comments div.comment h2 {
+   font-size: large;
+   margin: 0px 0px 0px 0px;
+   background-color: #05a;
+   color: #fff;
+   vertical-align: bottom;
+   text-align: left;
+   padding: 0px 2px 0px 2px;
+}
+div.comments div.comment h2 a { color: #fff; }
+div.comments div.comment h2 a:visited { color: #fff; }
+div.comments div.comment h2 a.poster { float: right; }
+div.comments div.comment h2 a.del {
+   text-align: left;
+   font-size: small;
+   color: #05a;
+}
+div.comments div.comment h2 a.del:visited { color: #05a; }
+div.comments div.comment h2 span.date {
+   font-weight: normal;
+   font-size: small;
+   direction: ltr;
+}
+div.comments div.comment div.details {
+   background-color: #fff;
+   padding: 0px 2px 0px 2px;
+   text-align: right;
+   font-size: smaller;
+   direction: ltr; /* gecko bug(?) */
+}
+div.comments div.comment div.details span.url { float: left; direction: rtl; }
+div.comments div.comment div.details div.parent { direction: rtl; }
+div.comments div.comment div.text {
+   margin: 2px 2px 2px 2px;
+}
+div.comments div.comment div.reply {
+   background-color: #fff;
+}
+
+div.comments label.reqf     { color: #f00; }
+div.comments img.emticn-add { cursor: pointer; }
+
+div.comments div.row {
+  clear: both;
+  padding-top: 1px;
+}
+div.comments div.row span.label {
+  float: right;
+  width: 100px;
+  text-align: left;
+  padding-left: 2px;
+}
+div.comments div.row span.formw {
+  width: 255px;
+  text-align: right;
+}
+div.comments div.colspan {
+   margin-right: 50px;
+}
+
+div.copy {
+   text-align: center;
+   margin-top: 10px;
+   font-size: smaller;
+}

@@ -1,0 +1,225 @@
+/* @todo space between photo and h1 in MSIE */
+
+body {
+   background-color: #ddd;
+   text-align: center; /* for MSIE */
+   font-size: small;
+   font-family: arial, sans-serif;
+}
+
+a {
+   font-weight: bold;
+   color: #06b;
+   text-decoration: none;
+}
+a:hover {
+   text-decoration: underline;
+   background-color: #eee;
+}
+a:active {
+   color: #d00;
+   background-color: #ff0;
+}
+a:visited { color: #06b;  }
+
+img {
+   border: none;
+}
+
+
+
+
+div.page {
+   width: 504px;
+   margin-left: auto;
+   margin-right: auto;
+
+   background: #fff;
+   border: 1px solid #000;
+   border-bottom: 0px;
+
+   text-align: right;
+}
+
+div.page div.photo {
+   width: 500px;
+   height: 240px;
+   border: 1px solid #000;
+   margin: 1px 1px 1px 1px;
+   background-image: url('../../addons/photo.php');
+}
+div.page div.photo span {
+   display: none;
+}
+
+div.page h1 {
+   width: 497px;
+   margin: 0px 1px 0px 1px;
+
+   padding-top: 2px;
+   padding-bottom: 2px;
+   padding-right: 5px;
+   padding-left: 0px;
+
+   background: #000;
+   color: #fff;
+   font-weight: bold;
+   font-size: small;
+}
+
+div.page h1.post {
+   text-align: left;
+}
+div.page h1 span.date {
+   padding-right: 3px;
+   float: right;
+}
+
+div.page div.topnav {
+   text-align: left;
+   direction: ltr;
+   margin-left: 1px;
+}
+div.page div.topnav ul {
+   margin-left: 0px;
+   padding: 0px 0px 0px 0px;
+	display: inline;
+	border: none;
+   }
+div.page div.topnav ul li {
+   padding: 0;
+	border: none;
+	list-style: none;
+	display: inline;
+   }
+
+div.post {
+   padding: 5px 15px 5px 15px;
+   line-height: 150%;
+}
+
+div.post div.here {
+   text-align: left;
+}
+
+div.post p.comments {
+   text-align: right;
+}
+
+
+div.post div.more {
+   border: 3px double #000;
+   padding: 0px 5px 10px 5px;
+   margin: 10px 5px 10px 5px;
+}
+div.post div.more h2 {
+   font-size: small;
+   margin: 15px 0px 0px 0px;
+   line-height: 130%;
+}
+div.post div.more ul {
+   margin: 5px 30px 5px 5px;
+}
+div.post div.more ul li {
+   margin-bottom: 5px;
+}
+
+
+
+div.post table.photos-table {
+   width: 460px;
+   border: 1px solid #000;
+   margin-bottom: 10px;
+   table-layout: auto;
+}
+div.post table.photos-table th {
+   font-weight: bold;
+   background-color: #ccc;
+}
+
+
+
+
+div.foot1 {
+   border: 1px solid #000;
+   border-bottom: 0px;
+   line-height: 160%;
+
+   width: 498px;
+   margin-left: auto;
+   margin-right: auto;
+   padding: 1px 3px 2px 3px;
+
+   background-color: #eee;
+   text-align: left;
+
+}
+div.foot1 ul.links {
+   margin: 0px 0px 0px 0px;
+   display: inline;
+}
+div.foot1 ul.links li {
+   display: inline;
+}
+
+div.foot2 {
+   border: 1px solid #000;
+   border-bottom: 0px;
+   line-height: 160%;
+
+   width: 498px;
+   margin-left: auto;
+   margin-right: auto;
+   padding: 1px 3px 2px 3px;
+
+   background-color: #fff;
+   text-align: center;
+}
+div.foot2 a {
+   font-weight: normal;
+}
+
+div.foot3 {
+   border: 1px solid #000;
+   border-bottom: 0px;
+   line-height: 160%;
+
+   width: 498px;
+   margin-left: auto;
+   margin-right: auto;
+   padding: 1px 3px 2px 3px;
+
+   background-color: #ddd;
+   text-align: right;
+}
+div.foot3 span {
+   float: left;
+}
+div.foot3 span a {
+   color: #000;
+}
+div.foot3 ul {
+   margin: 0px 0px 0px 0px;
+}
+div.foot3 ul li {
+   display: inline;
+}
+div.foot3 ul li a {
+   color: #000;
+}
+
+div.foot4 {
+   border: 1px solid #000;
+   line-height: 160%;
+
+   width: 498px;
+   margin-left: auto;
+   margin-right: auto;
+   padding: 1px 3px 2px 3px;
+
+   background-color: #fff;
+   text-align: left;
+}
+div.foot4 img.n0nick {
+   float: right;
+}

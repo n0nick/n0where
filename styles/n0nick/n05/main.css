@@ -1,0 +1,87 @@
+html {
+   overflow-x: hidden;
+   overflow-y: auto;
+}
+
+body {
+   margin: 0px 0px 0px 0px;
+   background: #fff url('../../../img/parchment.jpg');
+}
+
+#page {
+   background: url('../../../img/vint.jpg') no-repeat scroll 0% 0%;
+   width: 800px;
+   height: 1128px;
+   padding-top: 30px;
+}
+
+#page #post {
+   width: 355px;
+   background: #fff url('../../../img/parchment2.jpg');
+   border: 1px dashed #950;
+   border-right: none;
+   padding-top: 5px;
+}
+
+#page #post p {
+   padding: 0px 10px 0px 10px;
+}
+
+p.byline {
+   font-size: x-small;
+   text-align: left;
+}
+
+#linksline {
+   text-align: center;
+   border-top: 1px dashed #950;
+   padding-top: 5px;
+   padding-bottom: 2px;
+}
+
+#linksline ul {
+   border: none;
+   display: inline;
+   margin-right: 0px;
+   padding-right: 0px;
+   font-size: smaller;
+}
+#linksline ul li {
+	list-style: none;
+	display: inline;
+   font-size: x-small;
+   font-weight: bold;
+}
+/* TODO this doesn't work on MSIE! */
+#linksline ul li:before { content: "| "; color: #666; }
+#linksline ul li.first:before { content: " "; }
+
+#mirror {
+   background: #fff url('../../../img/vint2.jpg') no-repeat scroll top right;
+   height: 1128px;
+   width: 455px;
+   position: absolute;
+   right: 800px;
+   top: 0px;
+}
+
+#figure {
+   width: 300px;
+   position: absolute;
+   right: 500px;
+   top: 1050px;
+   text-align: center;
+}
+
+#figure #foot {
+   margin-top: 10px;
+   border-top: 1px solid #ccc;
+   text-align: center;
+   font-size: smaller;
+}
+
+#figure #foot p {
+   margin-top: 2px;
+}
+
+/* simba says roar! */  
