@@ -353,9 +353,6 @@ class Comment {
                                          'Somehow the comment wasn\'t deleted.');
       }
 
-      // remove from memory (works?)
-      unset($this);
-
       // return post's comments count (actually this has 1 too many)
       return $count;
 

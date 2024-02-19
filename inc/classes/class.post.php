@@ -273,7 +273,6 @@ class Post {
             }
          }
 
-         unset($this); // remove from memory (works?)
          return TRUE;
 
       } else {
