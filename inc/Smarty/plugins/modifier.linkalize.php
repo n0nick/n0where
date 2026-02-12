@@ -21,16 +21,19 @@
 
 function smarty_modifier_linkalize($text) {
 
+	// TODO(sagie, 2024-09-27): disabling this plugin due to preg_replace compilation failures
+	return $text;
+
       //make sure there is an http:// on all URLs
       $text = preg_replace("/([^\w\/])(www\.[a-z0-9\-]+\.[a-z0-9\-]+)/i",
                            "$1http://$2", $text);
       $text = preg_replace("/([\w]+:\/\/[\w-?&;#~=\.\/\@]+[\w\/])/i",
                            "<a target=\"_blank\" href=\"$1\" title=\"$1\">$1"
-                          ."</a>", $text); //make all URLs links
+                          ."<\/a>", $text); //make all URLs links
 
       $text = preg_replace("/[\w-\.]+@(\w+[\w-]+\.){0,3}\w+[\w-]+\.[a-zA-Z]"
                           ."{2,4}\b/i", "<a href=\"mailto:$0\" class=link>$0"
-                          ."</a>",$text);
+                          ."<\/a>",$text);
 
       return $text;
 

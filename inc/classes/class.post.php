@@ -301,11 +301,11 @@ class Post {
    function getAttribute($what) {
 
       $what = strtolower($what);
-      $regex = '<'.$what.'>((.*\n*)*)</'.$what.'>';
-      eregi ($regex, $this->content, $matches);
+      $regex = '/<'.$what.'>(.*?)<\/'.$what.'>/is';
+      preg_match_all ($regex, $this->content, $matches);
 
       // didn't your momma tell you never to play with matches?
-      $matches = $matches[1];
+      $matches = $matches[1][0];
 
       return $matches;
 

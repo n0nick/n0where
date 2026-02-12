@@ -313,7 +313,7 @@ class Site {
 
       foreach ($configs as $config) {
          // remove comments
-         $config = split(';',$config);
+         $config = explode(';',$config);
          $config = trim($config[0]);
 
          if (preg_match('/\[(.*)\]/', $config, $match)) { // new section
@@ -602,9 +602,9 @@ class Site {
         return $this->cookie;
         
       else {
-        $oreo = split('&', @$_COOKIE['details']);
+        $oreo = explode('&', @$_COOKIE['details']);
         foreach ($oreo as $milk) {
-           $milk = split('=', $milk);
+           $milk = explode('=', $milk);
            $cookie[@$milk[0]] = @$milk[1];
         }
         $this->cookie = $cookie;

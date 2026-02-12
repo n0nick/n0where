@@ -152,7 +152,7 @@ class Archive {
 
       if ($this->site->db->num_rows($q)>0) {
          $yrs  = array();
-         while ($r = mysql_fetch_row($q)) {
+         while ($r = $q->fetch_row()) {
             $yr = date('Y',$r[0]);
             array_push($yrs,$yr);
          }
@@ -177,7 +177,7 @@ class Archive {
                                 $this->site->db->error());
 
       $mons     = array();
-      while ($r = mysql_fetch_row($q)) {
+      while ($r = $q->fetch_row()) {
          $month = date('n',$r[0]);
          array_push($mons,$month);
       } unset($r);

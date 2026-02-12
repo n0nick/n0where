@@ -142,17 +142,17 @@ class Database {
     */
    function connect() {
 
-      @$this->link = mysql_connect ($this->host,
-                                   $this->username,
-                                   $this->password);
-      if (mysql_errno()) {
-         return mysql_error();
+      @$this->link = mysqli_connect ($this->host,
+                                     $this->username,
+                                     $this->password);
+      if (!$this->link) {
+         return mysqli_connect_error(); // mysqli_error($this->link);
       } else {
-         mysql_select_db ($this->dbname, $this->link);
+         mysqli_select_db ($this->link, $this->dbname);
          // WARNING WARNING
          // stupidest utf8 workaround ahead
          // PLEASE.WALK.CAREFULY
-         mysql_query("SET NAMES 'utf8'");
+         mysqli_query($this->link, "SET NAMES 'utf8'");
          // hazlash
          return TRUE;
       }
@@ -172,7 +172,7 @@ class Database {
    function query($sql) {
       $sql = str_replace('`+', '`'.$this->prefix, $sql);
 
-      $this->last_result = mysql_query($sql, $this->link);
+      $this->last_result = mysqli_query($this->link, $sql);
       return $this->last_result;
 
    } // query()
@@ -187,10 +187,10 @@ class Database {
     * @return array Array of results
     * @link   http://www.php.net/manual/en/function.mysql-fetch-assoc.php
     */
-   function fetch_assoc($result=0) {
+   function fetch_assoc($result=NULL) {
 
-      if ($result == 0) { $result = $this->last_result; }
-      return mysql_fetch_assoc($result);
+      if (is_null($result)) { $result = $this->last_result; }
+      return mysqli_fetch_assoc($result);
 
    } // fetch_array()
 
@@ -207,7 +207,7 @@ class Database {
    function fetch_row($result=0) {
 
       if ($result == 0) { $result = $this->last_result; }
-      return mysql_fetch_row($result);
+      return mysqli_fetch_row($result);
 
    } // fetch_row()
 
@@ -222,7 +222,7 @@ class Database {
     */
    function insert_id() {
 
-      return mysql_insert_id($this->link);
+      return mysqli_insert_id($this->link);
 
    }
 
@@ -239,7 +239,7 @@ class Database {
    function num_rows($result=0) {
 
       if ($result == 0) { $result = $this->last_result; }
-      return mysql_num_rows($result);
+      return mysqli_num_rows($result);
 
    } // num_rows()
 
@@ -254,7 +254,7 @@ class Database {
     */
    function affected_rows() {
 
-      return mysql_affected_rows($this->link);
+      return mysqli_affected_rows($this->link);
 
    } // affected_rows()
 
@@ -270,7 +270,7 @@ class Database {
     */
    function error() {
 
-      return mysql_error($this->link);
+      return mysqli_error($this->link);
 
    } // error()
 
@@ -285,7 +285,7 @@ class Database {
     */
    function _Database() {
 
-      return mysql_close($this->link);
+      return mysqli_close($this->link);
 
    } // _Database()
 

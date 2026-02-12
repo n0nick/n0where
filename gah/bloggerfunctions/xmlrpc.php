@@ -121,7 +121,7 @@ function xmlrpc_entity_decode($string) {
   $op="";
   $i=0; 
   while($i<sizeof($top)) {
-	if (ereg("^([#a-zA-Z0-9]+);", $top[$i], $regs)) {
+	if (preg_match("^([#a-zA-Z0-9]+);", $top[$i], $regs)) {
 	  $op.=ereg_replace("^[#a-zA-Z0-9]+;",
 						xmlrpc_lookup_entity($regs[1]),
 											$top[$i]);
@@ -141,7 +141,7 @@ function xmlrpc_lookup_entity($ent) {
   
   if (isset($xmlEntities[strtolower($ent)]))
 	return $xmlEntities[strtolower($ent)];
-  if (ereg("^#([0-9]+)$", $ent, $regs))
+  if (preg_match("^#([0-9]+)$", $ent, $regs))
 	return chr($regs[1]);
   return "?";
 }
@@ -252,7 +252,7 @@ function xmlrpc_ee($parser, $name) {
 		} else {
 			// we have an I4, INT or a DOUBLE
 			// we must check that only 0123456789-.<space> are characters here
-			if (!ereg("^\-?[0123456789 \t\.]+$", $_xh[$parser]['ac'])) {
+			if (!preg_match("^\-?[0123456789 \t\.]+$", $_xh[$parser]['ac'])) {
 				// TODO: find a better way of throwing an error
 				// than this!
 				error_log("XML-RPC: non numeric value received in INT or DOUBLE");
@@ -315,7 +315,7 @@ function xmlrpc_cd($parser, $data)
 {	
   global $_xh, $xmlrpc_backslash;
 
-  //if (ereg("^[\n\r \t]+$", $data)) return;
+  //if (preg_match("^[\n\r \t]+$", $data)) return;
   // print "adding [${data}]\n";
 
 	if ($_xh[$parser]['lv']!=3) {
@@ -654,8 +654,8 @@ class xmlrpcmsg {
 	}
 	// see if we got an HTTP 200 OK, else bomb
 	// but only do this if we're using the HTTP protocol.
-	if (ereg("^HTTP",$data) && 
-			!ereg("^HTTP/[0-9\.]+ 200 ", $data)) {
+	if (preg_match("^HTTP",$data) && 
+			!preg_match("^HTTP/[0-9\.]+ 200 ", $data)) {
 		$errstr= substr($data, 0, strpos($data, "\n")-1);
 		error_log("HTTP error, got response: " .$errstr);
 		$r=new xmlrpcresp(0, $xmlrpcerr["http_error"],
@@ -664,7 +664,7 @@ class xmlrpcmsg {
 		return $r;
 	}
 	// gotta get rid of headers here
-	if ((!$hdrfnd) && ereg("^(.*)\r\n\r\n",$data,$_xh[$parser]['ha'])) {
+	if ((!$hdrfnd) && preg_match("^(.*)\r\n\r\n",$data,$_xh[$parser]['ha'])) {
 	  // ORIGINAL CODE
 	  //$data=ereg_replace("^.*\r\n\r\n", "", $data);
 	  // MY REPLACEMENT
@@ -984,7 +984,7 @@ function iso8601_encode($timet, $utc=0) {
 function iso8601_decode($idate, $utc=0) {
 	// return a timet in the localtime, or UTC
 	$t=0;
-	if (ereg("([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})",
+	if (preg_match("([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})",
 					 $idate, $regs)) {
 		if ($utc) {
 			$t=gmmktime($regs[4], $regs[5], $regs[6], $regs[2], $regs[3], $regs[1]);

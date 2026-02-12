@@ -439,7 +439,7 @@ class Comment {
    function validAddress($email = '') {
       if (empty($email)) { $email = $this->email; }
 
-      return eregi("^[a-z0-9\._-]+@+[a-z0-9\._-]+\.+[a-z]{2,3}$", $email);
+      return preg_match("/^[a-z0-9\._-]+@+[a-z0-9\._-]+\.+[a-z]{2,3}$/i", $email);
    }
 
 } // Comment

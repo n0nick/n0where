@@ -46,7 +46,7 @@ if (!empty($_POST['action'])) { // take POST calls
    switch ($site->getSetting('filemode')) {
       case 'path':
          $pathinfo = $_SERVER['REQUEST_URI'];
-         $path     = split ('/',$pathinfo);
+         $path     = explode ('/',$pathinfo);
          array_shift($path);
          break;
       case 'get':
