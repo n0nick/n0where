@@ -39,7 +39,18 @@ require_once("xmlrpc.php");
  of this library, so I guess you could just use that ;)
 \***************************************************************************/
 $BLOGGER_APPID  = "n0nick";
-$BLOGGER_SERVER = "n0nick.net";
+
+/* The XML-RPC endpoint is this same site, so dial it directly over plain
+   HTTP on the loopback interface. The public vhost is HTTPS-only and 301s
+   every request, and this 2003 client speaks HTTP/1.0 and does not follow
+   redirects -- it was parsing the redirect page as XML and giving up with
+   "XML error at line 1", which is why the admin post list came up empty.
+
+   Overridable from pass.inc.php, which is already the per-environment file:
+   the test harness runs nginx in a separate container, where 127.0.0.1 is
+   not the web server. */
+$BLOGGER_SERVER = defined('N0_RPC_HOST') ? N0_RPC_HOST : '127.0.0.1';
+$BLOGGER_PORT   = defined('N0_RPC_PORT') ? N0_RPC_PORT : 8080;
 $BLOGGER_PATH   = "/n0/rpc2.php";
 
 
@@ -593,10 +604,10 @@ function debug($value) {
 /************************************************************************************/
 // Returns a connection object to the blogger server
 function blogger_connectToBlogger() {
-	global $BLOGGER_APPID, $BLOGGER_SERVER, $BLOGGER_PATH;
+	global $BLOGGER_APPID, $BLOGGER_SERVER, $BLOGGER_PATH, $BLOGGER_PORT;
 
 	// Connect to blogger server
-	if($blogClient = new xmlrpc_client($BLOGGER_PATH, $BLOGGER_SERVER)) {
+	if($blogClient = new xmlrpc_client($BLOGGER_PATH, $BLOGGER_SERVER, $BLOGGER_PORT)) {
 		return $blogClient;
 	}
 	else {
@@ -611,7 +622,11 @@ function blogger_checkFaultString($bloggerResult) {
 	if (@$bloggerResult["faultString"]) {
 		return $bloggerResult["faultString"];
 	}
-	else if (@strpos($bloggerResult, "java.lang.Exception") !== false) {
+	/* @ cannot suppress PHP 8's TypeError, and strpos() on the array this
+	   normally receives is exactly that. Guard on the type: the branch was
+	   only ever meant for a string result. */
+	else if (is_string($bloggerResult)
+	         && strpos($bloggerResult, "java.lang.Exception") !== false) {
 		return $bloggerResult;
 	}
 	else {
