@@ -12,8 +12,6 @@ OUT="${2:-golden}"
 mkdir -p "$OUT"
 rm -f "$OUT"/*.http "$OUT"/*.body "$OUT"/*.errors 2>/dev/null || true
 
-DIAG='^(Deprecated|Warning|Notice|Fatal error|Parse error|Strict Standards):'
-
 urls=()
 while IFS= read -r url; do
   [[ -z "$url" || "$url" == \#* ]] && continue
@@ -48,18 +46,17 @@ for url in "${urls[@]}"; do
   slug="$(printf '%s' "$url" | sed -e 's#^/##' -e 's#[^A-Za-z0-9._-]#_#g')"
   [[ -z "$slug" ]] && slug="root"
 
+  docker compose -f compose.yml exec -T "$SVC" sh -c ': > /tmp/php-errors.log'
+
   code="$(curl -s -o "$OUT/$slug.raw" -w '%{http_code}' "http://localhost:$PORT$url")"
   printf '%s %s\n' "$code" "$url" > "$OUT/$slug.http"
 
-  grep -E "$DIAG" "$OUT/$slug.raw" 2>/dev/null \
+  docker compose -f compose.yml exec -T "$SVC" cat /tmp/php-errors.log 2>/dev/null \
+    | sed -E 's#^\[[^]]*\] ##; s#PHP (Deprecated|Warning|Notice|Fatal error|Parse error):#\1:#' \
     | sed -E 's# in /var/www/html/n0/# in #; s#templates_c/%%[^ ]*%%#templates_c/<COMPILED>#' \
-    | sort | uniq -c > "$OUT/$slug.errors" || true
+    | sed -E 's#, referer:.*##' | sort | uniq -c > "$OUT/$slug.errors" || true
 
-  # PHP prints "\nMESSAGE\n" INLINE, mid-output -- so a line-based strip
-  # leaves the leading newline behind and splits the surrounding markup.
-  # Remove the message together with both its newlines.
-  perl -0777 -pe 's/\n(?:Deprecated|Warning|Notice|Fatal error|Parse error|Strict Standards): [^\n]*\n//g' \
-    "$OUT/$slug.raw" | ./normalize.sh > "$OUT/$slug.body"
+  ./normalize.sh < "$OUT/$slug.raw" > "$OUT/$slug.body"
   rm -f "$OUT/$slug.raw"
 
   nerr=$(awk '{s+=$1} END{print s+0}' "$OUT/$slug.errors")
