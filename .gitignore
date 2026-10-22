@@ -2,3 +2,10 @@ inc/*.ini*
 templates_c
 img/items
 gah/pass.inc.php
+
+# harness: real data and run artifacts
+harness/seed/*.sql
+harness/golden/
+harness/candidate/
+cache
+configs

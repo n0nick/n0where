@@ -1,0 +1,11 @@
+# One path per line. Captured from :8074 (PHP 7.4) as the reference,
+# then replayed against :8083 (PHP 8.3) and diffed.
+# Add real post/archive IDs from your data -- see README.
+/n0/
+/n0/rss
+/n0/about
+/n0/about/site
+/n0/about/webmaster
+/n0/about/subscribe
+/n0/archive
+/n0/nonexistent-route
