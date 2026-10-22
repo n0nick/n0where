@@ -293,11 +293,13 @@ class IXR_Server {
     }
     function serve($data = false) {
         if (!$data) {
-            global $HTTP_RAW_POST_DATA;
-            if (!$HTTP_RAW_POST_DATA) {
+            /* $HTTP_RAW_POST_DATA was removed in PHP 7.0, so this was always
+               null and the server rejected every request -- the endpoint has
+               been dead since that upgrade. php://input is the replacement. */
+            $data = file_get_contents('php://input');
+            if (!$data) {
                die('XML-RPC server accepts POST requests only.');
             }
-            $data = $HTTP_RAW_POST_DATA;
         }
         $this->message = new IXR_Message($data);
         if (!$this->message->parse()) {
