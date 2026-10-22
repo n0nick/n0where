@@ -145,9 +145,9 @@
 
 {php}
 $cookie = array();
-$oreo = split('&', @$_COOKIE['details']);
+$oreo = explode('&', @$_COOKIE['details']);
 foreach ($oreo as $milk) {
-    $milk = split('=', $milk);
+    $milk = explode('=', $milk);
     $cookie[@$milk[0]] = @$milk[1];
 }
 $this->_tpl_vars['cookie'] = $cookie;
