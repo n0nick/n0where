@@ -27,7 +27,7 @@ function smarty_core_is_secure($params, &$smarty)
             foreach ((array)$params['resource_base_path'] as $curr_dir) {
                 if ( ($_cd = realpath($curr_dir)) !== false &&
                      strncmp($_rp, $_cd, strlen($_cd)) == 0 &&
-                     $_rp{strlen($_cd)} == DIRECTORY_SEPARATOR ) {
+                     $_rp[strlen($_cd)] == DIRECTORY_SEPARATOR ) {
                     return true;
                 }
             }
@@ -36,7 +36,7 @@ function smarty_core_is_secure($params, &$smarty)
             foreach ((array)$smarty->secure_dir as $curr_dir) {
                 if ( ($_cd = realpath($curr_dir)) !== false &&
                      strncmp($_rp, $_cd, strlen($_cd)) == 0 &&
-                     $_rp{strlen($_cd)} == DIRECTORY_SEPARATOR ) {
+                     $_rp[strlen($_cd)] == DIRECTORY_SEPARATOR ) {
                     return true;
                 }            
             }
