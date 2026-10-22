@@ -90,30 +90,30 @@ function newPost($args) {
       $server->error(8002, 'Wrong type for content.');
    } else if ($password === $site->ad_pass) {
       // get title tag
-      $title = eregi ('<title>((.*\n*)*)</title>', $content, $matches);
+      $title = preg_match('#<title>(.*)</title>#is', $content, $matches);
       $title = @$matches[1]; $matches = 0;
 
       // get template tag
-      $template = eregi ('<template>((.*\n*)*)</template>', $content, $matches);
+      $template = preg_match('#<template>(.*)</template>#is', $content, $matches);
       $template = @$matches[1]; $matches = 0;
       if (!$template) $template = $site->getSetting('defskin'); // default value
 
       // get comments tags
-      $allowcomments = eregi('<allow_comments>((.*\n*)*)</allow_comments>',$content,$matches);
+      $allowcomments = preg_match('#<allow_comments>(.*)</allow_comments>#is',$content,$matches);
       $allowcomments = @$matches[1]; $matches = 0;
       if (!$allowcomments)
          $allowcomments = $site->getSetting('allow_comments'); // default value
 
-      $commentalert = eregi('<comment_alert>((.*\n*)*)</comment_alert>',$content,$matches);
+      $commentalert = preg_match('#<comment_alert>(.*)</comment_alert>#is',$content,$matches);
       $commentalert = @$matches[1]; $matches = 0;
       if (!$commentalert)
          $commentalert = $site->getSetting('comment_alert'); // default value
 
       // remove tags
-      $content = eregi_replace('<title>((.*\n*)*)</title>', '', $content);
-      $content = eregi_replace('<template>((.*\n*)*)</template>', '', $content);
-      $content = eregi_replace('<allow_comments>((.*\n*)*)</allow_comments>', '', $content);
-      $content = eregi_replace('<comment_alert>((.*\n*)*)</comment_alert>', '', $content);
+      $content = preg_replace('#<title>(.*)</title>#is', '', $content);
+      $content = preg_replace('#<template>(.*)</template>#is', '', $content);
+      $content = preg_replace('#<allow_comments>(.*)</allow_comments>#is', '', $content);
+      $content = preg_replace('#<comment_alert>(.*)</comment_alert>#is', '', $content);
 
       // build xml body
       $content = '<title>'.$title.'</title>'."\n"
@@ -205,31 +205,31 @@ function editPost($args) {
          $oldcontent = str_replace($oldalert, '', $oldcontent);
 
          // get title tag
-         $title = eregi ('<title>((.*\n*)*)</title>', $content, $matches);
+         $title = preg_match('#<title>(.*)</title>#is', $content, $matches);
          $title = @$matches[1]; $matches = 0;
 
          // get template tag
-         $template = eregi('<template>((.*\n*)*)</template>',$content,$matches);
+         $template = preg_match('#<template>(.*)</template>#is',$content,$matches);
          $template = @$matches[1]; $matches = 0;
          if (!$template)
             $template = $post->getAttribute('template'); // old value
 
          // get comments tags
-         $allowcomments = eregi('<allow_comments>((.*\n*)*)</allow_comments>',$content,$matches);
+         $allowcomments = preg_match('#<allow_comments>(.*)</allow_comments>#is',$content,$matches);
          $allowcomments = @$matches[1]; $matches = 0;
          if (!$allowcomments)
             $allowcomments = $site->getSetting('allow_comments'); // default value
 
-         $commentalert = eregi('<comment_alert>((.*\n*)*)</comment_alert>',$content,$matches);
+         $commentalert = preg_match('#<comment_alert>(.*)</comment_alert>#is',$content,$matches);
          $commentalert = @$matches[1]; $matches = 0;
          if (!$commentalert)
             $commentalert = $site->getSetting('comment_alert'); // default value
 
          // remove tags
-         $text = eregi_replace('<title>((.*\n*)*)</title>', '', $content);
-         $text = eregi_replace('<template>((.*\n*)*)</template>', '', $text);
-         $text = eregi_replace('<allow_comments>((.*\n*)*)</allow_comments>', '', $text);
-         $text = eregi_replace('<comment_alert>((.*\n*)*)</comment_alert>', '', $text);
+         $text = preg_replace('#<title>(.*)</title>#is', '', $content);
+         $text = preg_replace('#<template>(.*)</template>#is', '', $text);
+         $text = preg_replace('#<allow_comments>(.*)</allow_comments>#is', '', $text);
+         $text = preg_replace('#<comment_alert>(.*)</comment_alert>#is', '', $text);
 
          $content = '<title>'   .$title   .'</title>'   ."\n"
                    .'<text>'    .$text    .'</text>'    ."\n"

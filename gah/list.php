@@ -58,7 +58,9 @@ $posts = blogger_getRecentPosts('n0nick', 'n0nick', N0_PASS, 20);
 $titles = array();
 $first = TRUE;
 foreach ($posts as $post) {
-   $title = eregi ('<title>((.*\n*)*)</title>', $post['content'], $matches);
+   /* eregi() was removed in PHP 7.0. POSIX '.' matched newlines, so /s
+      keeps the original behaviour; /i replaces the eregi case-fold. */
+   $title = preg_match('#<title>(.*)</title>#is', $post['content'], $matches);
    $title = @$matches[1]; $matches = 0;
 ?>
    <option value="<?=$post['postid']?>"<?php if ($first) {?> selected="selected"<?php }?>><?=$post['postid']?> :

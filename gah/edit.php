@@ -66,23 +66,23 @@ if (stristr(@$_GET['submit'],'למחוק')): ?>
 $postid = $_GET['postid']+0;
 $post = blogger_getPost($postid, 'n0nick', N0_PASS);
 
-$title = eregi ('<title>((.*\n*)*)</title>', $post['content'], $matches);
+$title = preg_match('#<title>(.*)</title>#is', $post['content'], $matches);
 $title = @$matches[1]; $matches = 0;
-$template = eregi('<template>((.*\n*)*)</template>',$post['content'],$matches);
+$template = preg_match('#<template>(.*)</template>#is',$post['content'],$matches);
 $template = @$matches[1]; $matches = 0;
-$allow_comments = eregi('<allow_comments>((.*\n*)*)</allow_comments>',$post['content'],$matches);
+$allow_comments = preg_match('#<allow_comments>(.*)</allow_comments>#is',$post['content'],$matches);
 $allow_comments = @$matches[1]; $matches = 0;
 $allowcomments = ($allow_comments != 'no');
 if ($allowcomments) {
-   $comment_alert = eregi('<comment_alert>((.*\n*)*)</comment_alert>',$post['content'],$matches);
+   $comment_alert = preg_match('#<comment_alert>(.*)</comment_alert>#is',$post['content'],$matches);
    $comment_alert = @$matches[1]; $matches = 0;
    $commentalert = ($comment_alert != 'no');
 } else { $commentalert = FALSE; }
 
-$content = eregi_replace('<title>((.*\n*)*)</title>', '', $post['content']);
-$content = eregi_replace('<template>((.*\n*)*)</template>', '', $content);
-$content = eregi_replace('<allow_comments>((.*\n*)*)</allow_comments>', '', $content);
-$content = eregi_replace('<comment_alert>((.*\n*)*)</comment_alert>', '', $content);
+$content = preg_replace('#<title>(.*)</title>#is', '', $post['content']);
+$content = preg_replace('#<template>(.*)</template>#is', '', $content);
+$content = preg_replace('#<allow_comments>(.*)</allow_comments>#is', '', $content);
+$content = preg_replace('#<comment_alert>(.*)</comment_alert>#is', '', $content);
 ?>
 
 <h1>עריכת פוסט</h1>
