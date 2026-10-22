@@ -79,7 +79,7 @@ class Akismet {
 	 *	@param	string	Your WordPress API key.
 	 *	@param	string	$blogURL			The URL of your blog.
 	 */
-	function Akismet($blogURL, $wordPressAPIKey) {
+	function __construct($blogURL, $wordPressAPIKey) {
 		$this->blogURL = $blogURL;
 		$this->wordPressAPIKey = $wordPressAPIKey;
 
@@ -298,7 +298,7 @@ class SocketWriteRead {
 	 *	@param	string	$request		The data to send.
 	 *	@param	int		$responseLength	The amount of data to read.  Defaults to 1160 bytes.
 	 */
-	function SocketWriteRead($host, $port, $request, $responseLength = 1160) {
+	function __construct($host, $port, $request, $responseLength = 1160) {
 		$this->host = $host;
 		$this->port = $port;
 		$this->request = $request;

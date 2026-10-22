@@ -120,7 +120,7 @@ class Database {
     * @param string $name Database name 
     * @return void
     */
-   function Database($host, $user, $pass, $name, $prefix) {
+   function __construct($host, $user, $pass, $name, $prefix) {
 
       $this->host     = $host;
       $this->username = $user;

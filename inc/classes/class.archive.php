@@ -86,7 +86,7 @@ class Archive {
     * @param int  $year  Year to display its page
     * @return void
     */
-   function Archive($site,$month=0,$year=0) {
+   function __construct($site,$month=0,$year=0) {
 
      $this->site  = $site;
 

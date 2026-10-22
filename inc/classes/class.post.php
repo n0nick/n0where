@@ -105,7 +105,7 @@ class Post {
     * @param int    $comments_count Post's comments count
     * @return void
     */
-   function Post($site, $postid = 0, $time = 0, $content = '',
+   function __construct($site, $postid = 0, $time = 0, $content = '',
                  $comments_count = 0) {
 
       $this->site           = $site;
@@ -175,7 +175,7 @@ class Post {
       // data cleanup
       $data['post'] = stripslashes(@$data['post']);
 
-      $this->Post($this->site,
+      $this->__construct($this->site,
                   @$data['postid'],
                   @$data['time'],
                   @$data['content'],

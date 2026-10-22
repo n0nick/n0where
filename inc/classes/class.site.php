@@ -243,7 +243,7 @@ class Site {
     * @return void
     * @param string $configfile location of config settings .ini file
     */
-   function Site($configfile) {
+   function __construct($configfile) {
 
       $this->startBenchmark();
 

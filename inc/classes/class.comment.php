@@ -139,7 +139,7 @@ class Comment {
     * @param int    $postid    Parent story's id
     * @return void
     */
-   function Comment($post, $commentid = 0, $parentid = 0, $comment = '',
+   function __construct($post, $commentid = 0, $parentid = 0, $comment = '',
                     $time = 0, $name = '', $email = '', $url = '', $ip = '',
                     $postid = 0) {
 
@@ -218,7 +218,7 @@ class Comment {
       $data['ip']      = stripslashes($data['ip']);
       $data['time']+= 3600*$this->post->site->config['settings']['time_offset'];
 
-      $this->Comment($this->post,
+      $this->__construct($this->post,
                      @$data['commentid'],
                      @$data['parentid'],
                      @$data['comment'],

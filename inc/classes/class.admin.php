@@ -93,7 +93,7 @@ class Admin {
     * @param Site $site  Parent site's instance
     * @return void
     */
-   function Admin($site, $area, $action, $parameters) {
+   function __construct($site, $area, $action, $parameters) {
 
       $this->site       = $site;
 
