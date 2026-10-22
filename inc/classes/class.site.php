@@ -850,6 +850,9 @@ class Site {
     * @return void
     */
    function displayError($func='', $msg='') {
+      if (!headers_sent()) {
+         http_response_code(500);
+      }
       print '<html><head><title>'.$this->name.':error</title></head><body>';
       print '<p>An error has occured. Gee, I wonder why.</p>';
       if (!empty($func)) {
