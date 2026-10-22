@@ -116,6 +116,21 @@ $xmlrpc_backslash=chr(92).chr(92);
 
 $_xh=array();
 
+/**
+ * Stable array key for an XML parser handle.
+ *
+ * PHP 8.0 changed xml_parser_create() to return an XMLParser object where it
+ * used to return a resource. $_xh is keyed by the parser throughout this
+ * file, and an object cannot be used as an array key -- it raises
+ * "Cannot access offset of type XMLParser on array".
+ *
+ * On PHP 7 the (int) cast reproduces exactly what PHP did implicitly with a
+ * resource, so this is a no-op there.
+ */
+function xmlrpc_parser_key($parser) {
+	return is_object($parser) ? spl_object_id($parser) : (int) $parser;
+}
+
 function xmlrpc_entity_decode($string) {
   $top=explode("&", $string);
   $op="";
@@ -152,28 +167,28 @@ function xmlrpc_se($parser, $name, $attrs) {
 	switch($name) {
 	case "STRUCT":
 	case "ARRAY":
-	  $_xh[$parser]['st'].="array(";
-	  $_xh[$parser]['cm']++;
+	  $_xh[xmlrpc_parser_key($parser)]['st'].="array(";
+	  $_xh[xmlrpc_parser_key($parser)]['cm']++;
 		// this last line turns quoting off
 		// this means if we get an empty array we'll 
 		// simply get a bit of whitespace in the eval
-		$_xh[$parser]['qt']=0;
+		$_xh[xmlrpc_parser_key($parser)]['qt']=0;
 	  break;
 	case "NAME":
-	  $_xh[$parser]['st'].="'"; $_xh[$parser]['ac']="";
+	  $_xh[xmlrpc_parser_key($parser)]['st'].="'"; $_xh[xmlrpc_parser_key($parser)]['ac']="";
 	  break;
 	case "FAULT":
-	  $_xh[$parser]['isf']=1;
+	  $_xh[xmlrpc_parser_key($parser)]['isf']=1;
 	  break;
 	case "PARAM":
-	  $_xh[$parser]['st']="";
+	  $_xh[xmlrpc_parser_key($parser)]['st']="";
 	  break;
 	case "VALUE":
-	  $_xh[$parser]['st'].="new xmlrpcval("; 
-		$_xh[$parser]['vt']=$xmlrpcString;
-		$_xh[$parser]['ac']="";
-		$_xh[$parser]['qt']=0;
-	  $_xh[$parser]['lv']=1;
+	  $_xh[xmlrpc_parser_key($parser)]['st'].="new xmlrpcval("; 
+		$_xh[xmlrpc_parser_key($parser)]['vt']=$xmlrpcString;
+		$_xh[xmlrpc_parser_key($parser)]['ac']="";
+		$_xh[xmlrpc_parser_key($parser)]['qt']=0;
+	  $_xh[xmlrpc_parser_key($parser)]['lv']=1;
 	  // look for a value: if this is still 1 by the
 	  // time we reach the first data segment then the type is string
 	  // by implication and we need to add in a quote
@@ -186,29 +201,29 @@ function xmlrpc_se($parser, $name, $attrs) {
 	case "DOUBLE":
 	case "DATETIME.ISO8601":
 	case "BASE64":
-	  $_xh[$parser]['ac']=""; // reset the accumulator
+	  $_xh[xmlrpc_parser_key($parser)]['ac']=""; // reset the accumulator
 
 	  if ($name=="DATETIME.ISO8601" || $name=="STRING") {
-			$_xh[$parser]['qt']=1; 
+			$_xh[xmlrpc_parser_key($parser)]['qt']=1; 
 			if ($name=="DATETIME.ISO8601")
-				$_xh[$parser]['vt']=$xmlrpcDateTime;
+				$_xh[xmlrpc_parser_key($parser)]['vt']=$xmlrpcDateTime;
 	  } else if ($name=="BASE64") {
-			$_xh[$parser]['qt']=2;
+			$_xh[xmlrpc_parser_key($parser)]['qt']=2;
 		} else {
 			// No quoting is required here -- but
 			// at the end of the element we must check
 			// for data format errors.
-			$_xh[$parser]['qt']=0;
+			$_xh[xmlrpc_parser_key($parser)]['qt']=0;
 	  }
 		break;
 	case "MEMBER":
-		$_xh[$parser]['ac']="";
+		$_xh[xmlrpc_parser_key($parser)]['ac']="";
 	  break;
 	default:
 		break;
 	}
 
-	if ($name!="VALUE") $_xh[$parser]['lv']=0;
+	if ($name!="VALUE") $_xh[xmlrpc_parser_key($parser)]['lv']=0;
 }
 
 function xmlrpc_ee($parser, $name) {
@@ -217,24 +232,24 @@ function xmlrpc_ee($parser, $name) {
 	switch($name) {
 	case "STRUCT":
 	case "ARRAY":
-	  if ($_xh[$parser]['cm'] && substr($_xh[$parser]['st'], -1) ==',') {
-		$_xh[$parser]['st']=substr($_xh[$parser]['st'],0,-1);
+	  if ($_xh[xmlrpc_parser_key($parser)]['cm'] && substr($_xh[xmlrpc_parser_key($parser)]['st'], -1) ==',') {
+		$_xh[xmlrpc_parser_key($parser)]['st']=substr($_xh[xmlrpc_parser_key($parser)]['st'],0,-1);
 	  }
-	  $_xh[$parser]['st'].=")";	
-	  $_xh[$parser]['vt']=strtolower($name);
-	  $_xh[$parser]['cm']--;
+	  $_xh[xmlrpc_parser_key($parser)]['st'].=")";	
+	  $_xh[xmlrpc_parser_key($parser)]['vt']=strtolower($name);
+	  $_xh[xmlrpc_parser_key($parser)]['cm']--;
 	  break;
 	case "NAME":
-	  $_xh[$parser]['st'].= $_xh[$parser]['ac'] . "' => ";
+	  $_xh[xmlrpc_parser_key($parser)]['st'].= $_xh[xmlrpc_parser_key($parser)]['ac'] . "' => ";
 	  break;
 	case "BOOLEAN":
 		// special case here: we translate boolean 1 or 0 into PHP
 		// constants true or false
-		if ($_xh[$parser]['ac']=='1') 
-			$_xh[$parser]['ac']="true";
+		if ($_xh[xmlrpc_parser_key($parser)]['ac']=='1') 
+			$_xh[xmlrpc_parser_key($parser)]['ac']="true";
 		else 
-			$_xh[$parser]['ac']="false";
-		$_xh[$parser]['vt']=strtolower($name);
+			$_xh[xmlrpc_parser_key($parser)]['ac']="false";
+		$_xh[xmlrpc_parser_key($parser)]['vt']=strtolower($name);
 		// Drop through intentionally.
 	case "I4":
 	case "INT":
@@ -242,71 +257,71 @@ function xmlrpc_ee($parser, $name) {
 	case "DOUBLE":
 	case "DATETIME.ISO8601":
 	case "BASE64":
-	  if ($_xh[$parser]['qt']==1) {
+	  if ($_xh[xmlrpc_parser_key($parser)]['qt']==1) {
 			// we use double quotes rather than single so backslashification works OK
-			$_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\""; 
-		} else if ($_xh[$parser]['qt']==2) {
-			$_xh[$parser]['st'].="base64_decode('". $_xh[$parser]['ac'] . "')"; 
+			$_xh[xmlrpc_parser_key($parser)]['st'].="\"". $_xh[xmlrpc_parser_key($parser)]['ac'] . "\""; 
+		} else if ($_xh[xmlrpc_parser_key($parser)]['qt']==2) {
+			$_xh[xmlrpc_parser_key($parser)]['st'].="base64_decode('". $_xh[xmlrpc_parser_key($parser)]['ac'] . "')"; 
 		} else if ($name=="BOOLEAN") {
-			$_xh[$parser]['st'].=$_xh[$parser]['ac'];
+			$_xh[xmlrpc_parser_key($parser)]['st'].=$_xh[xmlrpc_parser_key($parser)]['ac'];
 		} else {
 			// we have an I4, INT or a DOUBLE
 			// we must check that only 0123456789-.<space> are characters here
-			if (!preg_match("/^\-?[0123456789 \t\.]+$/", $_xh[$parser]['ac'])) {
+			if (!preg_match("/^\-?[0123456789 \t\.]+$/", $_xh[xmlrpc_parser_key($parser)]['ac'])) {
 				// TODO: find a better way of throwing an error
 				// than this!
 				error_log("XML-RPC: non numeric value received in INT or DOUBLE");
-				$_xh[$parser]['st'].="ERROR_NON_NUMERIC_FOUND";
+				$_xh[xmlrpc_parser_key($parser)]['st'].="ERROR_NON_NUMERIC_FOUND";
 			} else {
 				// it's ok, add it on
-				$_xh[$parser]['st'].=$_xh[$parser]['ac'];
+				$_xh[xmlrpc_parser_key($parser)]['st'].=$_xh[xmlrpc_parser_key($parser)]['ac'];
 			}
 		}
-		$_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
-		$_xh[$parser]['lv']=3; // indicate we've found a value
+		$_xh[xmlrpc_parser_key($parser)]['ac']=""; $_xh[xmlrpc_parser_key($parser)]['qt']=0;
+		$_xh[xmlrpc_parser_key($parser)]['lv']=3; // indicate we've found a value
 	  break;
 	case "VALUE":
 		// deal with a string value
-		if (strlen($_xh[$parser]['ac'])>0 &&
-				$_xh[$parser]['vt']==$xmlrpcString) {
-			$_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\""; 
+		if (strlen($_xh[xmlrpc_parser_key($parser)]['ac'])>0 &&
+				$_xh[xmlrpc_parser_key($parser)]['vt']==$xmlrpcString) {
+			$_xh[xmlrpc_parser_key($parser)]['st'].="\"". $_xh[xmlrpc_parser_key($parser)]['ac'] . "\""; 
 		}
 		// This if() detects if no scalar was inside <VALUE></VALUE>
 		// and pads an empty "".
-		if($_xh[$parser]['st'][strlen($_xh[$parser]['st'])-1] == '(') {
-			$_xh[$parser]['st'].= '""';
+		if($_xh[xmlrpc_parser_key($parser)]['st'][strlen($_xh[xmlrpc_parser_key($parser)]['st'])-1] == '(') {
+			$_xh[xmlrpc_parser_key($parser)]['st'].= '""';
 		}
-		$_xh[$parser]['st'].=", '" . $_xh[$parser]['vt'] . "')";
-		if ($_xh[$parser]['cm']) $_xh[$parser]['st'].=",";
+		$_xh[xmlrpc_parser_key($parser)]['st'].=", '" . $_xh[xmlrpc_parser_key($parser)]['vt'] . "')";
+		if ($_xh[xmlrpc_parser_key($parser)]['cm']) $_xh[xmlrpc_parser_key($parser)]['st'].=",";
 		break;
 	case "MEMBER":
-	  $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
+	  $_xh[xmlrpc_parser_key($parser)]['ac']=""; $_xh[xmlrpc_parser_key($parser)]['qt']=0;
 	 break;
 	case "DATA":
-	  $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
+	  $_xh[xmlrpc_parser_key($parser)]['ac']=""; $_xh[xmlrpc_parser_key($parser)]['qt']=0;
 	  break;
 	case "PARAM":
-	  $_xh[$parser]['params'][]=$_xh[$parser]['st'];
+	  $_xh[xmlrpc_parser_key($parser)]['params'][]=$_xh[xmlrpc_parser_key($parser)]['st'];
 	  break;
 	case "METHODNAME":
-	  $_xh[$parser]['method']=preg_replace("/^[\n\r\t ]+/", "", 
-																				 $_xh[$parser]['ac']);
+	  $_xh[xmlrpc_parser_key($parser)]['method']=preg_replace("/^[\n\r\t ]+/", "", 
+																				 $_xh[xmlrpc_parser_key($parser)]['ac']);
 		break;
 	case "BOOLEAN":
 		// special case here: we translate boolean 1 or 0 into PHP
 		// constants true or false
-		if ($_xh[$parser]['ac']=='1') 
-			$_xh[$parser]['ac']="true";
+		if ($_xh[xmlrpc_parser_key($parser)]['ac']=='1') 
+			$_xh[xmlrpc_parser_key($parser)]['ac']="true";
 		else 
-			$_xh[$parser]['ac']="false";
-		$_xh[$parser]['vt']=strtolower($name);
+			$_xh[xmlrpc_parser_key($parser)]['ac']="false";
+		$_xh[xmlrpc_parser_key($parser)]['vt']=strtolower($name);
 		break;
 	default:
 		break;
 	}
 	// if it's a valid type name, set the type
 	if (isset($xmlrpcTypes[strtolower($name)])) {
-		$_xh[$parser]['vt']=strtolower($name);
+		$_xh[xmlrpc_parser_key($parser)]['vt']=strtolower($name);
 	}
 	
 }
@@ -318,19 +333,19 @@ function xmlrpc_cd($parser, $data)
   //if (preg_match("^[\n\r \t]+$", $data)) return;
   // print "adding [${data}]\n";
 
-	if ($_xh[$parser]['lv']!=3) {
+	if ($_xh[xmlrpc_parser_key($parser)]['lv']!=3) {
 		// "lookforvalue==3" means that we've found an entire value
 		// and should discard any further character data
-		if ($_xh[$parser]['lv']==1) {  
+		if ($_xh[xmlrpc_parser_key($parser)]['lv']==1) {  
 			// if we've found text and we're just in a <value> then
 			// turn quoting on, as this will be a string
-			$_xh[$parser]['qt']=1; 
+			$_xh[xmlrpc_parser_key($parser)]['qt']=1; 
 			// and say we've found a value
-			$_xh[$parser]['lv']=2; 
+			$_xh[xmlrpc_parser_key($parser)]['lv']=2; 
 		}
 	// replace characters that eval would
 	// do special things with
-	$_xh[$parser]['ac'].=str_replace('$', '\$',
+	$_xh[xmlrpc_parser_key($parser)]['ac'].=str_replace('$', '\$',
 		str_replace('"', '\"', str_replace(chr(92),
 			$xmlrpc_backslash, $data)));
 	}
@@ -340,11 +355,11 @@ function xmlrpc_dh($parser, $data)
 {
   global $_xh;
   if (substr($data, 0, 1) == "&" && substr($data, -1, 1) == ";") {
-		if ($_xh[$parser]['lv']==1) {  
-			$_xh[$parser]['qt']=1; 
-			$_xh[$parser]['lv']=2; 
+		if ($_xh[xmlrpc_parser_key($parser)]['lv']==1) {  
+			$_xh[xmlrpc_parser_key($parser)]['qt']=1; 
+			$_xh[xmlrpc_parser_key($parser)]['lv']=2; 
 		}
-		$_xh[$parser]['ac'].=str_replace('$', '\$',
+		$_xh[xmlrpc_parser_key($parser)]['ac'].=str_replace('$', '\$',
 				str_replace('"', '\"', str_replace(chr(92),
 					$xmlrpc_backslash, $data)));
   }
@@ -627,13 +642,13 @@ class xmlrpcmsg {
 	
 	$parser = xml_parser_create($xmlrpc_defencoding);
 
-	$_xh[$parser]=array();
+	$_xh[xmlrpc_parser_key($parser)]=array();
 
-	$_xh[$parser]['st']=""; 
-	$_xh[$parser]['cm']=0; 
-	$_xh[$parser]['isf']=0; 
-	$_xh[$parser]['ac']="";
-	$_xh[$parser]['qt']="";
+	$_xh[xmlrpc_parser_key($parser)]['st']=""; 
+	$_xh[xmlrpc_parser_key($parser)]['cm']=0; 
+	$_xh[xmlrpc_parser_key($parser)]['isf']=0; 
+	$_xh[xmlrpc_parser_key($parser)]['ac']="";
+	$_xh[xmlrpc_parser_key($parser)]['qt']="";
 
 	xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, true);
 	xml_set_element_handler($parser, "xmlrpc_se", "xmlrpc_ee");
@@ -664,7 +679,7 @@ class xmlrpcmsg {
 		return $r;
 	}
 	// gotta get rid of headers here
-	if ((!$hdrfnd) && preg_match("/^(.*)\r\n\r\n/s",$data,$_xh[$parser]['ha'])) {
+	if ((!$hdrfnd) && preg_match("/^(.*)\r\n\r\n/s",$data,$_xh[xmlrpc_parser_key($parser)]['ha'])) {
 	  // ORIGINAL CODE
 	  //$data=ereg_replace("^.*\r\n\r\n", "", $data);
 	  // MY REPLACEMENT
@@ -689,18 +704,18 @@ class xmlrpcmsg {
 	xml_parser_free($parser);
 	if ($this->debug) {
 	  print "<PRE>---EVALING---[" . 
-		strlen($_xh[$parser]['st']) . " chars]---\n" . 
-		htmlspecialchars($_xh[$parser]['st']) . ";\n---END---</PRE>";
+		strlen($_xh[xmlrpc_parser_key($parser)]['st']) . " chars]---\n" . 
+		htmlspecialchars($_xh[xmlrpc_parser_key($parser)]['st']) . ";\n---END---</PRE>";
 	}
-	if (strlen($_xh[$parser]['st'])==0) {
+	if (strlen($_xh[xmlrpc_parser_key($parser)]['st'])==0) {
 	  // then something odd has happened
 	  // and it's time to generate a client side error
 	  // indicating something odd went on
 	  $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
 						$xmlrpcstr["invalid_return"]);
 	} else {
-	  eval('$v=' . $_xh[$parser]['st'] . '; $allOK=1;');
-	  if ($_xh[$parser]['isf']) {
+	  eval('$v=' . $_xh[xmlrpc_parser_key($parser)]['st'] . '; $allOK=1;');
+	  if ($_xh[xmlrpc_parser_key($parser)]['isf']) {
 		$f=$v->structmem("faultCode");
 		$fs=$v->structmem("faultString");
 		$r=new xmlrpcresp($v, $f->scalarval(), 
@@ -709,7 +724,7 @@ class xmlrpcmsg {
 		$r=new xmlrpcresp($v);
 	  }
 	}
-	$r->hdrs=preg_split("/\r?\n/", $_xh[$parser]['ha'][1]);
+	$r->hdrs=preg_split("/\r?\n/", $_xh[xmlrpc_parser_key($parser)]['ha'][1]);
 	return $r;
   }
 
