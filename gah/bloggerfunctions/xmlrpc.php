@@ -117,12 +117,12 @@ $xmlrpc_backslash=chr(92).chr(92);
 $_xh=array();
 
 function xmlrpc_entity_decode($string) {
-  $top=split("&", $string);
+  $top=explode("&", $string);
   $op="";
   $i=0; 
   while($i<sizeof($top)) {
 	if (preg_match("^([#a-zA-Z0-9]+);", $top[$i], $regs)) {
-	  $op.=ereg_replace("^[#a-zA-Z0-9]+;",
+	  $op.=preg_replace('/^[#a-zA-Z0-9]+;/',
 						xmlrpc_lookup_entity($regs[1]),
 											$top[$i]);
 	} else {
@@ -289,7 +289,7 @@ function xmlrpc_ee($parser, $name) {
 	  $_xh[$parser]['params'][]=$_xh[$parser]['st'];
 	  break;
 	case "METHODNAME":
-	  $_xh[$parser]['method']=ereg_replace("^[\n\r\t ]+", "", 
+	  $_xh[$parser]['method']=preg_replace("/^[\n\r\t ]+/", "", 
 																				 $_xh[$parser]['ac']);
 		break;
 	case "BOOLEAN":
@@ -709,7 +709,7 @@ class xmlrpcmsg {
 		$r=new xmlrpcresp($v);
 	  }
 	}
-	$r->hdrs=split("\r?\n", $_xh[$parser]['ha'][1]);
+	$r->hdrs=preg_split("/\r?\n/", $_xh[$parser]['ha'][1]);
 	return $r;
   }
 
@@ -797,11 +797,10 @@ class xmlrpcval {
   }
 
   function dump($ar) {
-	reset($ar);
-	while ( list( $key, $val ) = each( $ar ) ) {
+	foreach ($ar as $key => $val) {
 	  echo "$key => $val<br>";
 	  if ($key == 'array')
-		while ( list( $key2, $val2 ) = each( $val ) ) {
+		foreach ($val as $key2 => $val2) {
 		  echo "-- $key2 => $val2<br>";
 		}
 	}
@@ -831,8 +830,7 @@ class xmlrpcval {
 		case 3:
 			// struct
 			$rs.="<struct>\n";
-			reset($val);
-			while(list($key2, $val2)=each($val)) {
+			foreach ($val as $key2 => $val2) {
 				$rs.="<member><name>${key2}</name>\n";
 				$rs.=$this->serializeval($val2);
 				$rs.="</member>\n";
@@ -877,7 +875,8 @@ class xmlrpcval {
 		$rs="";
 		$ar=$o->me;
 		reset($ar);
-		list($typ, $val) = each($ar);
+		$typ = key($ar);
+		$val = current($ar);
 		$rs.="<value>";
 		$rs.=$this->serializedata($typ, $val);
 		$rs.="</value>\n";
@@ -894,14 +893,25 @@ class xmlrpcval {
 	}
 	
 	function structeach() {
-		return each($this->me["struct"]);
+		/* each() was removed in PHP 8. Callers drive this as
+		   while (list($k,$v) = $val->structeach()), so reproduce each()'s
+		   contract exactly: return its four-key shape, advance the internal
+		   pointer, and yield false once past the end. */
+		$k = key($this->me["struct"]);
+		if ($k === null) {
+			return false;
+		}
+		$v = current($this->me["struct"]);
+		next($this->me["struct"]);
+		return array(0 => $k, 'key' => $k, 1 => $v, 'value' => $v);
 	}
 
   function getval() {
 		// UNSTABLE
 		global $xmlrpcBoolean, $xmlrpcBase64;
 		reset($this->me);
-		list($a,$b)=each($this->me);
+		$a = key($this->me);
+		$b = current($this->me);
 		// contributed by I Sofer, 2001-03-24
 		// add support for nested arrays to scalarval
 		// i've created a new method here, so as to
@@ -930,14 +940,16 @@ class xmlrpcval {
   function scalarval() {
 		global $xmlrpcBoolean, $xmlrpcBase64;
 		reset($this->me);
-		list($a,$b)=each($this->me);
+		$a = key($this->me);
+		$b = current($this->me);
 		return $b;
   }
 
   function scalartyp() {
 		global $xmlrpcI4, $xmlrpcInt;
 		reset($this->me);
-		list($a,$b)=each($this->me);
+		$a = key($this->me);
+		$b = current($this->me);
 		if ($a==$xmlrpcI4) 
 			$a=$xmlrpcInt;
 		return $a;
@@ -950,7 +962,8 @@ class xmlrpcval {
 
   function arraysize() {
 		reset($this->me);
-		list($a,$b)=each($this->me);
+		$a = key($this->me);
+		$b = current($this->me);
 		return sizeof($b);
   }
 }
@@ -1054,7 +1067,7 @@ function xmlrpc_encode($php_val) {
       case "array":
       case "object":
          $arr = array();
-         while (list($k,$v) = each($php_val)) {
+         foreach ($php_val as $k => $v) {
             $arr[$k] = xmlrpc_encode($v);
          }
          $xmlrpc_val->addStruct($arr);

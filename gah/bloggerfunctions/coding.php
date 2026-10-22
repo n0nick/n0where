@@ -59,7 +59,7 @@ function xmlrpc_encode($php_val) {
       case "array":
       case "object":
          $arr = array();
-         while (list($k,$v) = each($php_val)) {
+         foreach ($php_val as $k => $v) {
             $arr[$k] = xmlrpc_encode($v);
          }
          $xmlrpc_val->addStruct($arr);

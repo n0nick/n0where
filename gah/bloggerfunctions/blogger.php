@@ -629,13 +629,13 @@ function display_select($name, $options, $value = 0, $misc = "unset") {
 		$select .= " name=\"" . $name . "\"";
 	}
 	if (is_array($misc)) {
-		while (list($id, $val) = each($misc)) {
+		foreach ($misc as $id => $val) {
 			$select .= " " . $id . "=\"" . $val . "\"";
 		}
 	}
 	$select .= ">";
 	if (is_array($options)) {
-		while (list($id, $val) = each($options)) {
+		foreach ($options as $id => $val) {
 			$select .= "\n<option";
 			$select .= " value=\"" . $id . "\"";
 			if (strcmp($id, $value))
