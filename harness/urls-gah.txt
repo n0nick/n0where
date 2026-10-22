@@ -1,6 +1,12 @@
-# Admin pages. Authenticated with the cookie gah/index.php sets.
-# Requires COOKIE='thank_god=its friday.' -- see capture.sh.
+# Admin pages. Authenticated with the cookie gah/index.php sets:
+#   COOKIE='thank_god=its friday.' ./capture.sh 8074 gah_ref urls-gah.txt
+#
+# list.php and edit.php both reach the XML-RPC client, which calls back into
+# rpc2.php on this same site -- so these exercise the server side too.
 /n0/gah/index.php
 /n0/gah/side.php?a=list
+/n0/gah/side.php?a=new
 /n0/gah/list.php
 /n0/gah/new.php
+/n0/gah/edit.php?postid=331
+/n0/gah/edit.php?postid=1
