@@ -85,3 +85,15 @@ approaches directly comparable.
 `addons/from.n0where.php` still calls `mysql_connect()` (removed in PHP 7.0),
 so it is already dead on prod today. Confirm it is unreachable rather than
 porting it.
+
+## Resetting the seed data
+
+The admin writes to the database, so testing an edit mutates the seed and
+every golden captured before it goes stale. To get back to the prod dump:
+
+    docker compose -f harness/compose.yml down -v
+    docker compose -f harness/compose.yml up -d --build
+    ./capture.sh 8074 golden
+
+`down -v` is required: MySQL only runs docker-entrypoint-initdb.d on a fresh
+data directory, so without dropping the volume the seed is silently ignored.
