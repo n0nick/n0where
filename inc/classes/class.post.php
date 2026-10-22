@@ -444,7 +444,10 @@ class Post {
             .'ORDER BY `postid` DESC';
       if ($q = $this->site->db->query($sql)) {
          $d = $this->site->db->fetch_row($q);
-         return $d[0];
+         /* No row means there is no next/previous post -- the newest and
+            oldest entries. fetch_row() returns null there, and indexing it
+            warns under PHP 8. FALSE matches the no-query branch below. */
+         return is_array($d) ? $d[0] : FALSE;
       } else {
          return FALSE;
       }
@@ -466,7 +469,10 @@ class Post {
             .'ORDER BY `postid`';
       if ($q = $this->site->db->query($sql)) {
          $d = $this->site->db->fetch_row($q);
-         return $d[0];
+         /* No row means there is no next/previous post -- the newest and
+            oldest entries. fetch_row() returns null there, and indexing it
+            warns under PHP 8. FALSE matches the no-query branch below. */
+         return is_array($d) ? $d[0] : FALSE;
       } else {
          return FALSE;
       }
