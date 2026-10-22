@@ -687,7 +687,10 @@ class xmlrpcmsg {
 	  $hdrfnd=1;
 	}
 	
-	if (!xml_parse($parser, $data, sizeof($data))) {
+	/* xml_parse()'s third argument is the is_final flag, not a length.
+	   sizeof() on a string returned 1 in PHP 7 -- i.e. true -- and is a
+	   TypeError in PHP 8. Pass the boolean that was always meant. */
+	if (!xml_parse($parser, $data, true)) {
 		// thanks to Peter Kocks <peter.kocks@baygate.com>
 		if((xml_get_current_line_number($parser)) == 1)   
 			$errstr = "XML error at line 1, check URL";
