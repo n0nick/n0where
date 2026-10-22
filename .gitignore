@@ -9,3 +9,5 @@ harness/golden/
 harness/candidate/
 cache
 configs
+harness/prod_before/
+harness/prod_after/
