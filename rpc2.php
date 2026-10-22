@@ -35,7 +35,14 @@ require_once('inc/include.inc.php');
 require_once('inc/IXR_Library.inc.php');
 
 // create site object according to location
-if (stristr(getenv('HTTP_HOST'),'n0nick.net')) {
+// NB: must test 'n0where.' before 'n0nick.', because the live host is
+// n0where.n0nick.net and matches both. Testing 'n0nick.net' first sent
+// production to the DreamHost config and this endpoint has been 500ing
+// ever since the site moved. Keep in step with index.php.
+if (stristr(getenv('HTTP_HOST'),'n0where.')) {
+   $site = new Site('inc/sagim.ini.php');
+}
+elseif (stristr(getenv('HTTP_HOST'),'n0nick.')) {
    $site = new Site('inc/dreamhost.ini.php');
 } else {
    $site = new Site('inc/local.ini.php');
