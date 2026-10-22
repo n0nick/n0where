@@ -97,9 +97,9 @@ $content = eregi_replace('<comment_alert>((.*\n*)*)</comment_alert>', '', $conte
 <?=$content?></textarea><br />
 <label for="template">תבנית עיצוב:</label>
 <input type="text" name="template" value="<?=$template?>" style="width: 100px;" /><br />
-<input type="checkbox" name="allowcomments"<?if ($allowcomments) {?> checked="checked"<?}?> onclick="gobo()" />
+<input type="checkbox" name="allowcomments"<?php if ($allowcomments) {?> checked="checked"<?php }?> onclick="gobo()" />
 <label for="allowcomments">אפשר הוספת תגובות</label><!--TODOOOOOOOOOOOOOOOOOOO-->
-<input type="checkbox" name="commentalert"<?if ($commentalert) {?> checked="checked"<?}?> />
+<input type="checkbox" name="commentalert"<?php if ($commentalert) {?> checked="checked"<?php }?> />
 <label for="commentalert">התראת תגובות</label><br />
 <input type="submit" value="אוקיי, יאללה.." class="submit" />
 </form>

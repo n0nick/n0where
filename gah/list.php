@@ -61,7 +61,7 @@ foreach ($posts as $post) {
    $title = eregi ('<title>((.*\n*)*)</title>', $post['content'], $matches);
    $title = @$matches[1]; $matches = 0;
 ?>
-   <option value="<?=$post['postid']?>"<?if ($first) {?> selected="selected"<?}?>><?=$post['postid']?> :
+   <option value="<?=$post['postid']?>"<?php if ($first) {?> selected="selected"<?php }?>><?=$post['postid']?> :
    <?=$title?></option>
 <?php $first = FALSE;
 } ?>

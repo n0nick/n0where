@@ -42,9 +42,9 @@ print '<'.'?xml version="1.0" encoding="utf-8"?'.'>';
 <div id="navcontainer">
 
 <ul id="navlist">
-   <li<?php if($a=='list'){?> id="active"<?}?>><a
+   <li<?php if($a=='list'){?> id="active"<?php }?>><a
       href="list.php">רשימת פוסטים</a></li>
-   <li<?php if($a=='new'){?> id="active"<?}?>><a
+   <li<?php if($a=='new'){?> id="active"<?php }?>><a
       href="new.php">פוסט חדש</a></li>
    <li><a href="http://n0nick.net/" target="_blank">האתר האתר</a></li>
    <li><a href="index.php?log=out" target="_top">יציאה מהמערכת</a></li>
