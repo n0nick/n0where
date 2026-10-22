@@ -32,3 +32,16 @@
 
 # --- error path ---
 /n0/nonexistent-route
+
+# --- one post per skin. Skins are stored inline in post content as
+#     <template>NAME</template>, so these exercise 10 different template
+#     trees -- n04 alone backs 219 posts. defskin is only the fallback.
+/n0/post/229
+/n0/post/320
+/n0/post/286
+/n0/post/226
+/n0/post/248
+/n0/post/249
+/n0/post/265
+/n0/post/266
+/n0/post/315
