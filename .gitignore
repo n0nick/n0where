@@ -11,3 +11,6 @@ cache
 configs
 harness/prod_before/
 harness/prod_after/
+harness/gah_ref/
+harness/gah_cand/
+harness/gah_ref_shorttags_on/

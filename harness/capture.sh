@@ -9,6 +9,10 @@ cd "$(dirname "$0")"
 
 PORT="${1:-8074}"
 OUT="${2:-golden}"
+URLS="${3:-urls.txt}"
+# Admin pages need the session cookie gah/index.php sets; public ones ignore it.
+CURLAUTH=()
+[[ -n "${COOKIE:-}" ]] && CURLAUTH=(-b "$COOKIE")
 mkdir -p "$OUT"
 rm -f "$OUT"/*.http "$OUT"/*.body "$OUT"/*.errors 2>/dev/null || true
 
@@ -16,7 +20,7 @@ urls=()
 while IFS= read -r url; do
   [[ -z "$url" || "$url" == \#* ]] && continue
   urls+=("$url")
-done < urls.txt
+done < "$URLS"
 
 # Each PHP version has its own templates_c/cache named volume, so the two can
 # never execute each other's compiled templates. Still clear before capturing:
@@ -40,7 +44,7 @@ docker compose -f compose.yml exec -T "$SVC" \
 
 # Warm pass: compile templates and let any compile-time diagnostics land
 # here rather than in the recorded run.
-for url in "${urls[@]}"; do curl -s -o /dev/null "http://localhost:$PORT$url"; done
+for url in "${urls[@]}"; do curl -s ${CURLAUTH[@]+"${CURLAUTH[@]}"} -o /dev/null "http://localhost:$PORT$url"; done
 
 for url in "${urls[@]}"; do
   slug="$(printf '%s' "$url" | sed -e 's#^/##' -e 's#[^A-Za-z0-9._-]#_#g')"
@@ -48,7 +52,7 @@ for url in "${urls[@]}"; do
 
   docker compose -f compose.yml exec -T "$SVC" sh -c ': > /tmp/php-errors.log'
 
-  code="$(curl -s -o "$OUT/$slug.raw" -w '%{http_code}' "http://localhost:$PORT$url")"
+  code="$(curl -s ${CURLAUTH[@]+"${CURLAUTH[@]}"} -o "$OUT/$slug.raw" -w '%{http_code}' "http://localhost:$PORT$url")"
   printf '%s %s\n' "$code" "$url" > "$OUT/$slug.http"
 
   docker compose -f compose.yml exec -T "$SVC" cat /tmp/php-errors.log 2>/dev/null \

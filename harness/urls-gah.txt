@@ -1,0 +1,6 @@
+# Admin pages. Authenticated with the cookie gah/index.php sets.
+# Requires COOKIE='thank_god=its friday.' -- see capture.sh.
+/n0/gah/index.php
+/n0/gah/side.php?a=list
+/n0/gah/list.php
+/n0/gah/new.php

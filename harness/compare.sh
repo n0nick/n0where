@@ -6,25 +6,30 @@
 set -uo pipefail
 cd "$(dirname "$0")"
 
-[[ -d golden && -n "$(ls -A golden 2>/dev/null)" ]] || {
-  echo "no goldens -- run ./capture.sh 8074 golden on UNMODIFIED code first"; exit 2; }
+# compare.sh [urls-file] [golden-dir] [candidate-dir]
+URLS="${1:-urls.txt}"
+GOLD="${2:-golden}"
+CAND="${3:-candidate}"
 
-./capture.sh 8083 candidate >/dev/null
+[[ -d $GOLD && -n "$(ls -A "$GOLD" 2>/dev/null)" ]] || {
+  echo "no goldens in $GOLD -- run ./capture.sh 8074 $GOLD $URLS first"; exit 2; }
+
+./capture.sh 8083 "$CAND" "$URLS" >/dev/null
 
 fail=0
-for g in golden/*.body; do
+for g in "$GOLD"/*.body; do
   name="$(basename "$g" .body)"
-  url="$(cut -d' ' -f2- < "golden/$name.http")"
-  c="candidate/$name.body"
+  url="$(cut -d' ' -f2- < "$GOLD/$name.http")"
+  c="$CAND/$name.body"
 
   [[ -f "$c" ]] || { echo "MISSING  $url"; fail=1; continue; }
 
-  gcode="$(cut -d' ' -f1 < "golden/$name.http")"
-  ccode="$(cut -d' ' -f1 < "candidate/$name.http")"
+  gcode="$(cut -d' ' -f1 < "$GOLD/$name.http")"
+  ccode="$(cut -d' ' -f1 < "$CAND/$name.http")"
 
-  if grep -qE 'Fatal error|Parse error' "candidate/$name.errors"; then
+  if grep -qE 'Fatal error|Parse error' "$CAND/$name.errors"; then
     echo "FATAL    $url"
-    sed 's/^/           /' "candidate/$name.errors" | grep -E 'Fatal|Parse'
+    sed 's/^/           /' "$CAND/$name.errors" | grep -E 'Fatal|Parse'
     fail=1; continue
   fi
 
@@ -38,8 +43,8 @@ for g in golden/*.body; do
     fail=1; continue
   fi
 
-  gn=$(awk '{s+=$1} END{print s+0}' "golden/$name.errors")
-  cn=$(awk '{s+=$1} END{print s+0}' "candidate/$name.errors")
+  gn=$(awk '{s+=$1} END{print s+0}' "$GOLD/$name.errors")
+  cn=$(awk '{s+=$1} END{print s+0}' "$CAND/$name.errors")
   if [[ "$cn" -gt 0 ]]; then
     echo "ok(warn) $url   diagnostics 7.4=$gn  8.3=$cn"
   else
