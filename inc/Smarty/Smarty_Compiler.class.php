@@ -262,12 +262,22 @@ class Smarty_Compiler extends Smarty {
         reset($this->_folded_blocks);
 
         /* replace special blocks by "{php}" */
-        $source_content = preg_replace($search.'', "'"
-                                       . $this->_quote_replace($this->left_delimiter) . 'php'
-                                       . "' . str_repeat(\"\n\", substr_count('\\0', \"\n\")) .'"
-                                       . $this->_quote_replace($this->right_delimiter)
-                                       . "'"
-                                       , $source_content);
+        /* This originally used preg_replace's /e modifier, where the
+           replacement above is PHP source to evaluate -- /e was removed in
+           PHP 7. Dropping the modifier without converting the replacement
+           inserts that source literally and breaks every {* comment *},
+           {literal} and {php} block. Evaluate it in a callback instead.
+           Result is "{php" + one newline per newline in the matched block
+           + "}", which preserves the compiler's line numbering. */
+        $_ldq = $this->left_delimiter;
+        $_rdq = $this->right_delimiter;
+        $source_content = preg_replace_callback($search,
+            function ($_match) use ($_ldq, $_rdq) {
+                return $_ldq . 'php'
+                     . str_repeat("\n", substr_count($_match[0], "\n"))
+                     . $_rdq;
+            },
+            $source_content);
 
         /* Gather all template tags. */
         preg_match_all("~{$ldq}\s*(.*?)\s*{$rdq}~s", $source_content, $_match);
