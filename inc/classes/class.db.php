@@ -236,9 +236,12 @@ class Database {
     * @return int Result rows count
     * @link   http://www.php.net/manual/en/function.mysql-num-rows.php
     */
-   function num_rows($result=0) {
+   function num_rows($result=null) {
 
-      if ($result == 0) { $result = $this->last_result; }
+      /* The sentinel used to be 0, but $result is a mysqli_result object
+         now, and comparing an object to an int emits "could not be
+         converted to int". Only the no-argument case should fall back. */
+      if ($result === null) { $result = $this->last_result; }
       return mysqli_num_rows($result);
 
    } // num_rows()
